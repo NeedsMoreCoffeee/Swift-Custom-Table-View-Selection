@@ -11,10 +11,10 @@ import UIKit
  class MenuTableCell: UITableViewCell{
      
      // the label used for our apps name
-    let appsTitleLabel = UILabel()
+    private let appsTitleLabel = UILabel()
      
     // the image view we will set our apps image to.
-    let appsImageView = UIImageView()
+    private let appsImageView = UIImageView()
      
     // sets our apps label font size
     private let fontSize = 20.0
@@ -42,6 +42,11 @@ import UIKit
     
     
 }
+
+
+
+
+
 
 
 // MARK: Layout

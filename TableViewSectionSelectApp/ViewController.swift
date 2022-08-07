@@ -16,6 +16,7 @@ struct ListApp{
 }
 
 
+// creates a table view with custom headers.
 class ViewController: UIViewController {
 
 
@@ -47,8 +48,8 @@ class ViewController: UIViewController {
                             ListApp(name: "Mail")]
   
     
-    // used to calculate where our split in the table view should go (aciveApps) -> splis -> (inactive apps)
-    private var inactiveSplitIndex = 1
+    // used to calculate where our split in the table view should go (acitve apps list) -> splitTitleView -> (inactive apps)
+    private var inactiveSplitIndex = 1 // must be set to 1 by default.
 
 
     override func viewDidLoad() {
@@ -60,7 +61,7 @@ class ViewController: UIViewController {
      
     }
 
-    // this function sorts our apps list into those that are active first, then figures out where to split our list
+    // this function sorts our apps list into those that are active first, then figures out where to split our list.
     private func sortAppsList(){
         
         // sorts by which apps are active
@@ -69,11 +70,11 @@ class ViewController: UIViewController {
         // determin where our split is by finding our first instance of a false app
         for (index, app) in apps.enumerated() {
             if app.isActive == false{
-                inactiveSplitIndex = index + 1
+                inactiveSplitIndex = index + 1 // +1 because we take our headerView at index 0 into account
                 return
             }
             
-            // if none of our apps are false, set our split index to the end of our table view
+            // if none of our apps are false, set our inactive apps split title view to the end of our table view
             inactiveSplitIndex = apps.count + 1
         }
     }
@@ -90,7 +91,7 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
         return apps.count + 2
     }
     
-    // the height for our cells.
+    // the height for our cells. Can be used to custom set our headers height at index.row 0 and at indexPath.row == inactiveSplitIndex
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
@@ -113,11 +114,13 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
             return customHeaderCell
            }
            else {
+               // else all other cells is our menuTable cell that holds our app information
                let appsCell =  tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! MenuTableCell
+               
                // remove higlighting on cell tap
                appsCell.selectionStyle = .none
                
-               // if the indexPath is greater than our splitIndex, we grab from our apps array list accordingly
+               // if the indexPath is greater than our splitIndex, we grab from our apps array list accordingly.
                let index =  indexPath.row > inactiveSplitIndex ? indexPath.row - 2 : indexPath.row - 1
                
                // set our apps labels
@@ -140,7 +143,7 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
         // toggle our app as active or inactive
         apps[index].isActive.toggle()
         
-        // sort our app list again
+        // sort our app list
         sortAppsList()
         
         // reload our table view
