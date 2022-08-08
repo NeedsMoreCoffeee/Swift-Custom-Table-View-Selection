@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  TableViewSectionSelectApp
 //
-//  Created by  NeedsMoreCoffee 
+//  Created by  NeedsMoreCoffee
 //
 
 import UIKit
@@ -12,6 +12,7 @@ import UIKit
 struct ListApp{
     var name: String
     var isActive = false
+    var appImageName = ""
     
 }
 
@@ -36,16 +37,16 @@ class ViewController: UIViewController {
     private let headerViewCellID = "headerViewCellID"
 
     // the list of apps we want on our menu
-    var apps: [ListApp] = [ ListApp(name: "Instagram"),
-                            ListApp(name: "FaceBook"),
-                            ListApp(name: "Twitter"),
-                            ListApp(name: "YouTube"),
-                            ListApp(name: "Snapchat"),
-                            ListApp(name: "TikTok"),
-                            ListApp(name: "WhatsApp"),
-                            ListApp(name: "Twitch"),
-                            ListApp(name: "Reddit"),
-                            ListApp(name: "Mail")]
+    var apps: [ListApp] = [ ListApp(name: "Photos", appImageName: "photos_icon"),
+                            ListApp(name: "App Store", appImageName: "app_store_icon"),
+                            ListApp(name: "Calender", appImageName: "app_store_icon"),
+                            ListApp(name: "iBooks", appImageName: "ibooks_icon"),
+                            ListApp(name: "iTunes", appImageName: "iTunes_icon"),
+                            ListApp(name: "Mail", appImageName: "mail_icon"),
+                            ListApp(name: "Maps", appImageName: "maps_icon"),
+                            ListApp(name: "Messages", appImageName: "messages_icon"),
+                            ListApp(name: "Music", appImageName: "music_icon"),
+                            ListApp(name: "Notes", appImageName: "notes_icon")]
   
     
     // used to calculate where our split in the table view should go (acitve apps list) -> splitTitleView -> (inactive apps)
@@ -54,6 +55,11 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // arrange our apps alphabetically
+        sortAppsArrayAlphabetically(index: 1)
+        
+        
         // set up our table view
         setUpViews()
         
@@ -73,12 +79,26 @@ class ViewController: UIViewController {
                 inactiveSplitIndex = index + 1 // +1 because we take our headerView at index 0 into account
                 return
             }
-            
-            // if none of our apps are false, set our inactive apps split title view to the end of our table view
-            inactiveSplitIndex = apps.count + 1
+
         }
+        
+        // if none of our apps are false, set our inactive apps split title view to the end of our table view
+        inactiveSplitIndex = apps.count + 1
+        
     }
 
+    // sorts the array alphabetically while keeping the apps that are active at the front of the array
+    private func sortAppsArrayAlphabetically(index: Int){
+ 
+        // if there are no active apps, sort the whole array
+        if inactiveSplitIndex <= 1 { apps.sort{ $0.name.lowercased() < $1.name.lowercased() }; return}
+        
+        // sort the active half of the array
+        apps[0...inactiveSplitIndex - 2].sort{ $0.name.lowercased() < $1.name.lowercased() }
+        
+        // sort the inactive half of the array
+        apps[(inactiveSplitIndex - 1)...].sort{ $0.name.lowercased() < $1.name.lowercased() }
+    }
 }
 
 
@@ -93,10 +113,11 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
     
     // the height for our cells. Can be used to custom set our headers height at index.row 0 and at indexPath.row == inactiveSplitIndex
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 55
     }
     
 
+    // populate our tableview
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // if the beginning of our list, or split, set the cell to our header cell
         if indexPath.row == 0 || indexPath.row ==  inactiveSplitIndex {
@@ -124,7 +145,10 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
                let index =  indexPath.row > inactiveSplitIndex ? indexPath.row - 2 : indexPath.row - 1
                
                // set our apps labels
-               appsCell.setLabels(title: "\(apps[index].name)")
+               appsCell.setLabels(title: "\(apps[index].name)", image: apps[index].appImageName)
+               
+               // set cell as active or not based on app
+               appsCell.setAppAsActive(isActive: apps[index].isActive)
                
                return appsCell
            }
@@ -139,13 +163,16 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
         
         // if the indexPath is greater than our splitIndex, we grab from our apps array list accordingly
         let index =  indexPath.row > inactiveSplitIndex ? indexPath.row - 2 : indexPath.row - 1
-
+        
         // toggle our app as active or inactive
         apps[index].isActive.toggle()
         
         // sort our app list
         sortAppsList()
         
+        // sort the two halves of our array alphabetically
+        sortAppsArrayAlphabetically(index: index)
+
         // reload our table view
         tableView.reloadData()
         
