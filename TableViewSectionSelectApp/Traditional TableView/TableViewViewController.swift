@@ -9,16 +9,21 @@ import UIKit
 
 
 // this is a reference to our apps.
-struct ListApp{
+class ListApp{
     var name: String
     var isActive = false
     var appImageName = ""
+    
+    init(name: String, appImageName: String){
+        self.name = name
+        self.appImageName = appImageName
+    }
     
 }
 
 
 // creates a table view with custom headers.
-class ViewController: UIViewController {
+class TableViewViewController: UIViewController {
 
 
     // our table view that holds our menu items
@@ -30,12 +35,8 @@ class ViewController: UIViewController {
         return tv
     }()
     
-    // the id for our menu cell
-    private let cellID = "menuViewCellID"
+ 
     
-    // the id for our menu titel cell
-    private let headerViewCellID = "headerViewCellID"
-
     // the list of apps we want on our menu
     var apps: [ListApp] = [ ListApp(name: "Photos", appImageName: "photos_icon"),
                             ListApp(name: "App Store", appImageName: "app_store_icon"),
@@ -49,66 +50,39 @@ class ViewController: UIViewController {
                             ListApp(name: "Notes", appImageName: "notes_icon")]
   
     
-    // used to calculate where our split in the table view should go (acitve apps list) -> splitTitleView -> (inactive apps)
-    private var inactiveSplitIndex = 1 // must be set to 1 by default.
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // arrange our apps alphabetically
-        sortAppsArrayAlphabetically(index: 1)
-        
+        sortAppsArrayAlphabetically()
         
         // set up our table view
         setUpViews()
-        
-
      
     }
 
-    // this function sorts our apps list into those that are active first, then figures out where to split our list.
-    private func sortAppsList(){
-        
-        // sorts by which apps are active
-        apps.sort{ $0.isActive && !$1.isActive}
-        
-        // determin where our split is by finding our first instance of a false app
-        for (index, app) in apps.enumerated() {
-            if app.isActive == false{
-                inactiveSplitIndex = index + 1 // +1 because we take our headerView at index 0 into account
-                return
-            }
-
-        }
-        
-        // if none of our apps are false, set our inactive apps split title view to the end of our table view
-        inactiveSplitIndex = apps.count + 1
-        
+    // returns a sorted tuple of our active apps and inactive
+    private func activeApps() -> (active: [ListApp], inactive: [ListApp]){
+        return (apps.filter{ $0.isActive}.sorted{$0.name.lowercased() < $1.name.lowercased()}, apps.filter{ !$0.isActive}.sorted{$0.name.lowercased() < $1.name.lowercased()} )
     }
 
     // sorts the array alphabetically while keeping the apps that are active at the front of the array
-    private func sortAppsArrayAlphabetically(index: Int){
- 
-        // if there are no active apps, sort the whole array
-        if inactiveSplitIndex <= 1 { apps.sort{ $0.name.lowercased() < $1.name.lowercased() }; return}
+    private func sortAppsArrayAlphabetically(){
+        apps.sort{ $0.name.lowercased() < $1.name.lowercased()}
         
-        // sort the active half of the array
-        apps[0...inactiveSplitIndex - 2].sort{ $0.name.lowercased() < $1.name.lowercased() }
-        
-        // sort the inactive half of the array
-        apps[(inactiveSplitIndex - 1)...].sort{ $0.name.lowercased() < $1.name.lowercased() }
     }
 }
 
 
 // MARK: Delegates and Protocols
-extension ViewController:  UITableViewDelegate, UITableViewDataSource{
+extension TableViewViewController:  UITableViewDelegate, UITableViewDataSource{
   
     // how many cells our table should have
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return the amount in our apps list + 2 for our 2 headerviews
-        return apps.count + 2
+        return section == 0 ? activeApps().active.count : activeApps().inactive.count
     }
     
     // the height for our cells. Can be used to custom set our headers height at index.row 0 and at indexPath.row == inactiveSplitIndex
@@ -116,33 +90,26 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
         return 55
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return section == 0 ? "ACTIVE" : "APPS"
+    }
 
     // populate our tableview
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // if the beginning of our list, or split, set the cell to our header cell
-        if indexPath.row == 0 || indexPath.row ==  inactiveSplitIndex {
-            let customHeaderCell = tableView.dequeueReusableCell(withIdentifier: headerViewCellID, for: indexPath) as! CustomHeaderCell
-            // remove higlighting on cell tap
-            customHeaderCell.selectionStyle = .none
-            
-            // determine the title
-            let title = indexPath.row == 0 ? "ACTIVE" : "APPS"
-            
-            // set the title name
-            customHeaderCell.setTitle(title: title)
-            
-            // return our custom header cell
-            return customHeaderCell
-           }
-           else {
+       
                // else all other cells is our menuTable cell that holds our app information
-               let appsCell =  tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! MenuTableCell
+        let appsCell =  tableView.dequeueReusableCell(withIdentifier: MenuTableCell.reuseIdentifier, for: indexPath) as! MenuTableCell
                
                // remove higlighting on cell tap
                appsCell.selectionStyle = .none
                
-               // if the indexPath is greater than our splitIndex, we grab from our apps array list accordingly.
-               let index =  indexPath.row > inactiveSplitIndex ? indexPath.row - 2 : indexPath.row - 1
+               let index =  indexPath.row
+        
+               let apps = indexPath.section == 0 ? activeApps().active : activeApps().inactive
                
                // set our apps labels
                appsCell.setLabels(title: "\(apps[index].name)", image: apps[index].appImageName)
@@ -151,27 +118,23 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
                appsCell.setAppAsActive(isActive: apps[index].isActive)
                
                return appsCell
-           }
+           
         
       
     }
     
     // what to do when tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // if we're not tapping an app cell, do nothing
-        if indexPath.row == 0 || indexPath.row == inactiveSplitIndex { return }
-        
+
         // if the indexPath is greater than our splitIndex, we grab from our apps array list accordingly
-        let index =  indexPath.row > inactiveSplitIndex ? indexPath.row - 2 : indexPath.row - 1
+        let index =  indexPath.row
+        
+        let apps = indexPath.section == 0 ? activeApps().active : activeApps().inactive
+
         
         // toggle our app as active or inactive
         apps[index].isActive.toggle()
-        
-        // sort our app list
-        sortAppsList()
-        
-        // sort the two halves of our array alphabetically
-        sortAppsArrayAlphabetically(index: index)
+ 
 
         // reload our table view
         tableView.reloadData()
@@ -183,7 +146,7 @@ extension ViewController:  UITableViewDelegate, UITableViewDataSource{
 
 
 // MARK: SetUpView and layouts
-extension ViewController{
+extension TableViewViewController{
     
     
     private func setUpViews(){
@@ -202,8 +165,7 @@ extension ViewController{
         ])
 
         // register table view cells
-        tableView.register(MenuTableCell.self, forCellReuseIdentifier: cellID)
-        tableView.register(CustomHeaderCell.self, forCellReuseIdentifier: headerViewCellID)
+        tableView.register(MenuTableCell.self, forCellReuseIdentifier: MenuTableCell.reuseIdentifier)
 
         
     }
