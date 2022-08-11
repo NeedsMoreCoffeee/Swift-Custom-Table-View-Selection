@@ -9,23 +9,27 @@
 /* Begin PBXBuildFile section */
 		A17D08BE289FAA7300C75A3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D08BD289FAA7300C75A3C /* AppDelegate.swift */; };
 		A17D08C0289FAA7300C75A3C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D08BF289FAA7300C75A3C /* SceneDelegate.swift */; };
-		A17D08C2289FAA7300C75A3C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D08C1289FAA7300C75A3C /* ViewController.swift */; };
+		A17D08C2289FAA7300C75A3C /* TableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D08C1289FAA7300C75A3C /* TableViewViewController.swift */; };
 		A17D08C7289FAA7500C75A3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A17D08C6289FAA7500C75A3C /* Assets.xcassets */; };
 		A17D08CA289FAA7500C75A3C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A17D08C8289FAA7500C75A3C /* LaunchScreen.storyboard */; };
-		A17D08D3289FB45600C75A3C /* CustomHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D08D2289FB45600C75A3C /* CustomHeaderCell.swift */; };
 		A17D08D6289FB47100C75A3C /* MenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D08D5289FB47100C75A3C /* MenuTableCell.swift */; };
+		A181BC5128A4EBB10069B96B /* AppsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181BC4D28A4EBB10069B96B /* AppsController.swift */; };
+		A181BC5228A4EBB10069B96B /* DiffableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181BC4E28A4EBB10069B96B /* DiffableTableViewController.swift */; };
+		A181BC5328A4EBB10069B96B /* DiffableTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181BC5028A4EBB10069B96B /* DiffableTVCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A17D08BA289FAA7300C75A3C /* TableViewSectionSelectApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TableViewSectionSelectApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A17D08BD289FAA7300C75A3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A17D08BF289FAA7300C75A3C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A17D08C1289FAA7300C75A3C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A17D08C1289FAA7300C75A3C /* TableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewViewController.swift; sourceTree = "<group>"; };
 		A17D08C6289FAA7500C75A3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A17D08C9289FAA7500C75A3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A17D08CB289FAA7500C75A3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A17D08D2289FB45600C75A3C /* CustomHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderCell.swift; sourceTree = "<group>"; };
 		A17D08D5289FB47100C75A3C /* MenuTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableCell.swift; sourceTree = "<group>"; };
+		A181BC4D28A4EBB10069B96B /* AppsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppsController.swift; sourceTree = "<group>"; };
+		A181BC4E28A4EBB10069B96B /* DiffableTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffableTableViewController.swift; sourceTree = "<group>"; };
+		A181BC5028A4EBB10069B96B /* DiffableTVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffableTVCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,8 +63,8 @@
 			isa = PBXGroup;
 			children = (
 				A17D08D1289FADFD00C75A3C /* AppDelegates */,
-				A17D08C1289FAA7300C75A3C /* ViewController.swift */,
-				A17D08D4289FB45E00C75A3C /* Cells */,
+				A181BC4C28A4EB5B0069B96B /* DiffableDataTableView */,
+				A181BC4B28A4E6E20069B96B /* Traditional TableView */,
 				A17D08C6289FAA7500C75A3C /* Assets.xcassets */,
 				A17D08C8289FAA7500C75A3C /* LaunchScreen.storyboard */,
 				A17D08CB289FAA7500C75A3C /* Info.plist */,
@@ -77,13 +81,23 @@
 			path = AppDelegates;
 			sourceTree = "<group>";
 		};
-		A17D08D4289FB45E00C75A3C /* Cells */ = {
+		A181BC4B28A4E6E20069B96B /* Traditional TableView */ = {
 			isa = PBXGroup;
 			children = (
-				A17D08D2289FB45600C75A3C /* CustomHeaderCell.swift */,
+				A17D08C1289FAA7300C75A3C /* TableViewViewController.swift */,
 				A17D08D5289FB47100C75A3C /* MenuTableCell.swift */,
 			);
-			path = Cells;
+			path = "Traditional TableView";
+			sourceTree = "<group>";
+		};
+		A181BC4C28A4EB5B0069B96B /* DiffableDataTableView */ = {
+			isa = PBXGroup;
+			children = (
+				A181BC4D28A4EBB10069B96B /* AppsController.swift */,
+				A181BC4E28A4EBB10069B96B /* DiffableTableViewController.swift */,
+				A181BC5028A4EBB10069B96B /* DiffableTVCell.swift */,
+			);
+			path = DiffableDataTableView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,10 +170,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A17D08C2289FAA7300C75A3C /* ViewController.swift in Sources */,
+				A181BC5328A4EBB10069B96B /* DiffableTVCell.swift in Sources */,
+				A17D08C2289FAA7300C75A3C /* TableViewViewController.swift in Sources */,
 				A17D08D6289FB47100C75A3C /* MenuTableCell.swift in Sources */,
-				A17D08D3289FB45600C75A3C /* CustomHeaderCell.swift in Sources */,
+				A181BC5228A4EBB10069B96B /* DiffableTableViewController.swift in Sources */,
 				A17D08BE289FAA7300C75A3C /* AppDelegate.swift in Sources */,
+				A181BC5128A4EBB10069B96B /* AppsController.swift in Sources */,
 				A17D08C0289FAA7300C75A3C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

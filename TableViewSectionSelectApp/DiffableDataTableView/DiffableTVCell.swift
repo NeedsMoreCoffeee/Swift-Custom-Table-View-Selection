@@ -8,8 +8,10 @@ import UIKit
 
 
 // MARK: The Table View Cell Used In our Menu
- class MenuTableCell: UITableViewCell{
+ class DiffableTVCell: UITableViewCell{
      
+     static let reuseIdentifier = "label-cell-reuse-identifier"
+
      // the label used for our apps name
     private let appsTitleLabel = UILabel()
      
@@ -23,12 +25,15 @@ import UIKit
      
     // sets our apps label font size
     private let fontSize = 20.0
+     
+
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setUpView()
     }
     
+
      /// sets the title
      public func setLabels(title: String, image: String){
         appsTitleLabel.text = title
@@ -68,7 +73,7 @@ import UIKit
 
 
 // MARK: Layout
-extension MenuTableCell{
+extension DiffableTVCell{
     
     private func setUpView(){
         
